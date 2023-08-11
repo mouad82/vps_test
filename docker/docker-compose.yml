@@ -1,0 +1,55 @@
+version: "3.9"
+
+services:
+  # app : (php 8.1 / laravel 10.10)
+  app-test:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ../src:/var/www/html
+      - ./configs/laravel/.env:/var/www/html/.env
+      - app-test-vendor:/var/www/html/vendor
+    ports:
+      - 82:80
+    networks:
+      - app-test-net
+
+  # db : (mysql-db 8)
+  mysql-db:
+    image: mysql:8
+    volumes:
+      - ./configs/mysql/data:/var/lib/mysql
+      - ./configs/mysql/dump:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - app-test-net
+
+  # db : (postgres-db 15)
+  pgsql-db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres # use default user
+      POSTGRES_PASSWORD: root
+    volumes:
+      - ./configs/pgsql/data:/var/lib/postgresql/data
+      - ./configs/pgsql/dump:/docker-entrypoint-initdb.d
+    networks:
+      - app-test-net
+  
+  # adminer : (for mysql-db/pgsql-db)
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - app-test-net
+
+networks:
+  app-test-net:
+    driver: bridge
+
+volumes:
+  app-test-vendor:

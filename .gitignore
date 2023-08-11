@@ -1,0 +1,2 @@
+docker/configs/mysql/data
+docker/configs/mysql/data/*

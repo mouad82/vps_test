@@ -53,9 +53,13 @@
                     </tr>
                 </tbody>
             </table>
+            <form action="{{route('payment')}}" method="POST">
+                @csrf
+                <input type="hidden" name="total" value="{{ $total }}">
             <div class="text-end pe-0">
-                <a class="btn btn-sm btn-primary" href="#">Save the command</a>
+                <button class="btn btn-sm btn-primary" type="submit">Go To Payment</button>
             </div>
+            </form>
         </div>
     </div>
 </body>

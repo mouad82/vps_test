@@ -33,7 +33,11 @@ RUN apk add \
     php81-tokenizer \
     php81-mbstring \
     php81-gd \
-    php81-session
+    php81-session\
+    && rm -rf /var/cache/apk/*
+
+# Install Node.js and npm using NodeSource
+RUN apk add --no-cache nodejs npm
 
 # nginx configurations
 COPY docker/configs/nginx/nginx.conf /etc/nginx/
@@ -43,6 +47,7 @@ COPY docker/configs/nginx/http.d/default.conf /etc/nginx/http.d
 RUN ln /usr/bin/php81 /usr/bin/php
 # --> download composer-setup.php
 RUN curl 'https://getcomposer.org/installer' -o 'composer-setup.php'
+
 # --> generate composer.phar & remove composer-setup.php
 RUN php composer-setup.php && rm composer-setup.php
 # --> move composer.phar to /usr/local/bin/composer (add the composer command)

@@ -7,6 +7,11 @@ use App\Models\Product;
 
 class ProductController extends Controller
 {
+    /**
+     * product liste
+     *
+     * @return view
+     */
     public function index()
     {
         $products = Product::query()->get();
@@ -14,12 +19,21 @@ class ProductController extends Controller
         $boxCount = is_array($box) ? count($box) : 0;
         return view('products.index', compact('products', 'boxCount'));
     }
-
+    /**
+     * create product
+     *
+     * @return view
+     */
     public function create()
     {
         return view('products.create');
     }
-
+    /**
+     * store product
+     *
+     * @param ProductRequest $request
+     * @return view
+     */
     public function store(ProductRequest $request)
     {
         // get data
@@ -35,14 +49,23 @@ class ProductController extends Controller
         Product::create($validatedData);
         return back();
     }
-
+    /**
+     * add product to box
+     *
+     * @param Product $product
+     * @return void
+     */
     public function addToBox(Product $product)
     {
         session()->push('box', $product->id);
         session()->save();
         return back();
     }
-
+    /**
+     * box
+     *
+     * @return view
+     */
     public function box()
     {
         $productsIds = session()->get('box') ?? [];

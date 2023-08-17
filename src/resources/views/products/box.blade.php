@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-</head>
-
-<body>
+@section('content')
     <div class="container pt-3">
         <div class="text-end mb-3">
             <a href="{{ route('products.index') }}" class="btn btn-sm btn-primary me-2">Products</a>
@@ -53,15 +45,15 @@
                     </tr>
                 </tbody>
             </table>
-            <form action="{{route('payment')}}" method="POST">
+            @if($total > 0)
+            <form action="{{route('goToPayment')}}" method="POST">
                 @csrf
                 <input type="hidden" name="total" value="{{ $total }}">
             <div class="text-end pe-0">
                 <button class="btn btn-sm btn-primary" type="submit">Go To Payment</button>
             </div>
             </form>
+            @endif
         </div>
     </div>
-</body>
-
-</html>
+@endsection

@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::group(['middleware' => ['auth']], function () { 
+
 Route::controller(ProductController::class)->prefix('products')->group(function () {
     Route::get('/', 'index')->name('products.index');
     Route::get('/create', 'create')->name('products.create');
@@ -22,15 +24,21 @@ Route::controller(ProductController::class)->prefix('products')->group(function 
     Route::get('/box', 'box')->name('products.box');
 });
 
-Auth::routes();
-
-
+Route::post('/save_order', [App\Http\Controllers\OrderController::class ,'saveorder']);
 // PAYMENT ROUTE
 
+Route::post('/goToPayment', [App\Http\Controllers\PaymentController::class, 'goToPayment'])->name('goToPayment');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::post('/payment', [App\Http\Controllers\PaymentController::class, 'goToPayment'])->name('payment');
 
-
+});
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('/payzone/webhook', [App\Http\Controllers\PaymentController::class ,'handleWebhook'])->name('payzone.webhook');
+
+
+Route::get('/',function() {
+    return redirect('login');
+});
+
+
+
